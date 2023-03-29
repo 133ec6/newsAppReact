@@ -38,27 +38,24 @@ export default class News extends Component {
         console.log(parsedData);
         this.setState({ loading:false, articles: parsedData.articles ,noOfPages:parsedData.totalResults/this.props.pageSize})
     }
-
-    handlePrev=async()=>{
+    async updateNews(){
         this.setState({loading:true,articles:[]});
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e8f9faeffa1f4916a5b13be8cabc6c91&page=${this.state.page-1}&pageSize=${this.props.pageSize}`;
 
         let data = await fetch(url);
         let parsedData = await data.json();
         console.log(parsedData);
-        
-        this.setState({ loading:false, articles: parsedData.articles , page:this.state.page-1  })
+        this.setState({ loading:false, articles: parsedData.articles });
     }
-        handleNext=async()=>{
+    handlePrev=async()=>{
+        this.updateNews();
+        this.setState({  page:this.state.page-1  })
+    }
+    handleNext=async()=>{
             
-        this.setState({loading:true,articles:[]});
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e8f9faeffa1f4916a5b13be8cabc6c91&page=${this.state.page+1}&pageSize=${this.props.pageSize}`;
+        this.updateNews();
 
-        let data = await fetch(url);
-        let parsedData = await data.json();
-        console.log(parsedData);
-
-        this.setState({ loading:false, articles: parsedData.articles , page:this.state.page+1})
+        this.setState({ page:this.state.page+1})
     }
 
     render() {
@@ -71,8 +68,8 @@ export default class News extends Component {
 
                     {
                         this.state.articles.map((article) => {
-                            return <div className="col my-3" key={article.url}>
-                                <NewsItem titile={article.title ? article.title.slice(0, 45) : article.title} description={article.description ? article.description.slice(0, 88) : article.description} imageUrl={article.urlToImage ? article.urlToImage : 'https://images.hindustantimes.com/tech/img/2023/03/28/1600x900/sunset_1679987142115_1679987149701_1679987149701.jpg'} newsUrl={article.url} />
+                            return <div className="col text-center mx-4 my-3" key={article.url}>
+                                <NewsItem titile={article.title ? article.title.slice(0, 45) : article.title} description={article.description ? article.description.slice(0, 88) : article.description} imageUrl={article.urlToImage ? article.urlToImage : 'https://images.hindustantimes.com/tech/img/2023/03/28/1600x900/sunset_1679987142115_1679987149701_1679987149701.jpg'} newsUrl={article.url} author={article.author} date={article.publishedAt}  source={article.source.name}/>
                             </div>
                         })
                     }
