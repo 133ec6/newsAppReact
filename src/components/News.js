@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
+import Spinner from './Spinner';
 
 
 export default class News extends Component {
@@ -17,40 +18,45 @@ export default class News extends Component {
     }
 
     async componentDidMount() {
-        let url = 'https://newsapi.org/v2/top-headlines?country=in&apiKey=e8f9faeffa1f4916a5b13be8cabc6c91';
+        
+        this.setState({loading:true,articles:[]});
+        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=e8f9faeffa1f4916a5b13be8cabc6c91&pageSize=${this.props.pageSize}`;
 
         let data = await fetch(url);
         let parsedData = await data.json();
         console.log(parsedData);
-        console.log(parsedData.totalResults/20);
-        this.setState({ articles: parsedData.articles ,noOfPages:parsedData.totalResults/20})
+        this.setState({ loading:false, articles: parsedData.articles ,noOfPages:parsedData.totalResults/this.props.pageSize})
     }
 
     handlePrev=async()=>{
-        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=e8f9faeffa1f4916a5b13be8cabc6c91&page=${this.state.page-1}`;
+        this.setState({loading:true,articles:[]});
+        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=e8f9faeffa1f4916a5b13be8cabc6c91&page=${this.state.page-1}&pageSize=${this.props.pageSize}`;
 
         let data = await fetch(url);
         let parsedData = await data.json();
         console.log(parsedData);
-
-        this.setState({ articles: parsedData.articles , page:this.state.page-1  })
+        
+        this.setState({ loading:false, articles: parsedData.articles , page:this.state.page-1  })
     }
         handleNext=async()=>{
-        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=e8f9faeffa1f4916a5b13be8cabc6c91&page=${this.state.page+1}&pageSize=20`;
+            
+        this.setState({loading:true,articles:[]});
+        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=e8f9faeffa1f4916a5b13be8cabc6c91&page=${this.state.page+1}&pageSize=${this.props.pageSize}`;
 
         let data = await fetch(url);
         let parsedData = await data.json();
         console.log(parsedData);
 
-        this.setState({ articles: parsedData.articles , page:this.state.page+1})
+        this.setState({ loading:false, articles: parsedData.articles , page:this.state.page+1})
     }
 
     render() {
 
         return (
             <div className="container my-3">
-                <h2 className='text-center my-3'>Top Headlines</h2>
-                <div className="row">
+                <h1 className='text-center my-3'>Top Headlines</h1>
+                {this.state.loading && <Spinner/>}
+                <div className="row md-3">
 
                     {
                         this.state.articles.map((article) => {
