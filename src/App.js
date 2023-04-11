@@ -4,12 +4,14 @@ import React, { useState } from 'react'
 import Navbar from './components/Navbar'
 import News from './components/News'
 
+
 import {
   BrowserRouter as Router,
   Routes,
   Route
 } from "react-router-dom";
 import LoadingBar from 'react-top-loading-bar'
+import About from './components/About';
 
 
 export default function App() {
@@ -31,6 +33,7 @@ export default function App() {
           <Navbar/>
           <Routes>
               <Route exact path="/" element={<News setProgress={setProgressfxn}  pageSize={pageSize} apikey = {apikey} country="in" category="science"/>}/>
+              <Route exact path="/about" element={<About/>} />
               <Route exact path='/business' element={<News setProgress={setProgressfxn}  key='business' pageSize={pageSize} apikey = {apikey} country='in' category='business' />}></Route>
               <Route exact path='/entertainment' element={<News setProgress={setProgressfxn}  key='entertainment' pageSize={pageSize} apikey = {apikey} country='in' category='entertainment' />}></Route>
               <Route exact path='/general' element={<News setProgress={setProgressfxn}  key='general' pageSize={pageSize} apikey = {apikey} country='in' category='general' />}></Route>
